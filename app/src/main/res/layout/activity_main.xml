@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.fei_ke.t9.MainActivity"
+    >
+
+    <TextView
+        android:id="@+id/textViewKeyword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLines="1"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/gridLayout"
+        android:layout_below="@+id/textViewKeyword"
+        android:clipChildren="false"
+        />
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        android:background="#20000000"
+        android:text="Hello World!"
+        app:columnCount="3"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="0dp"
+        >
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="1"
+            />
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="2 ABC"
+            />
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="3 DEF"
+            />
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="4 GHI"
+            />
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="5 JKL"
+            />
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="6 MNO"
+            />
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="7 PQRS"
+            />
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="8 TUV"
+            />
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="9 WXYZ"
+            />
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="x"
+            />
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="0"
+            />
+
+        <TextView
+            style="@style/keyboard_item"
+            android:text="←"
+            />
+    </android.support.v7.widget.GridLayout>
+</RelativeLayout>
