@@ -1,5 +1,6 @@
 package com.fei_ke.t9
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import android.content.Intent
@@ -11,7 +12,6 @@ import com.t9search.util.T9Util
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val allAppList = ArrayList<App>()
@@ -25,7 +25,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val loading = AtomicBoolean(true)
 
     init {
-        val loadTask = object : AsyncTask<Unit, List<App>, Unit>() {
+        val loadTask = @SuppressLint("StaticFieldLeak")
+        object : AsyncTask<Unit, List<App>, Unit>() {
             override fun doInBackground(vararg params: Unit) {
                 val packageManager = application.packageManager
                 val intent = Intent(Intent.ACTION_MAIN)
@@ -76,6 +77,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun appList() = appList
 
     fun query(keywords: String?) {
+        this.keywords = keywords
+
         if (!loading.get()) {
             if (searchedCache.containsKey(keywords)) {
                 appList.postValue(ListData(searchedCache[keywords]!!))
