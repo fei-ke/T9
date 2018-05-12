@@ -3,16 +3,20 @@ package com.fei_ke.t9
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.PopupMenu
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import com.airbnb.epoxy.EpoxyAdapter
 import com.airbnb.epoxy.OnModelClickListener
+import com.airbnb.epoxy.OnModelLongClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -22,6 +26,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setSupportActionBar(toolBar)
+        val actionBar = supportActionBar!!
+        actionBar.setDisplayShowTitleEnabled(false)
 
         (0 until gridLayout.childCount).forEach {
             val view = gridLayout.getChildAt(it)
@@ -40,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(MainViewModel::class.java)
         mainViewModel.appList().observe(this, Observer {
+            Log.i("MainActivity", "onAppListChange: ${it!!.data.size} , ${it!!.loadMore}")
             if (it!!.loadMore) {
                 listAdapter.addMore(it.data)
             } else {
@@ -63,6 +72,11 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    override fun onStop() {
+        super.onStop()
+        textViewKeyword.text = null
+    }
+
     private fun setupRecyclerView() {
         val spanCount = 3
         val layoutManager = GridLayoutManager(this, spanCount)
@@ -73,13 +87,12 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.itemAnimator = null
 
-        val gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
-            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+        //close activity when tap empty area
+        val gestureDetector = GestureDetector(this, object : SingleTapGestureListener() {
+            override fun onSingleTap() {
                 finish()
-                return true
             }
         })
-
         recyclerView.setOnTouchListener({ _, event ->
             gestureDetector.onTouchEvent(event)
         })
@@ -116,6 +129,20 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private val onAppLongClickListener = OnModelLongClickListener<AppModel_, AppModel.ViewHolder> { model, _, clickedView, _ ->
+        val app = model.app
+        val popupMenu = PopupMenu(this, clickedView)
+        popupMenu.menu.add("App Info").setOnMenuItemClickListener {
+            val i = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            i.addCategory(Intent.CATEGORY_DEFAULT)
+            i.data = Uri.parse("package:${app.pkgName}")
+            startActivity(i)
+            true
+        }
+        popupMenu.show()
+        true
+    }
+
     private val listAdapter = object : EpoxyAdapter() {
         init {
         }
@@ -123,7 +150,8 @@ class MainActivity : AppCompatActivity() {
         fun addMore(appList: List<App>) {
             val list = appList.map {
                 AppModel_(it)
-                        .onAppClickListener(onAppClickListener)
+                        .onAppClickListener(onAppClickListener)!!
+                        .onAppLongClickListener(onAppLongClickListener)
             }
             addModels(list)
         }
@@ -131,11 +159,39 @@ class MainActivity : AppCompatActivity() {
         fun update(appList: List<App>) {
             val list = appList.map {
                 AppModel_(it)
-                        .onAppClickListener(onAppClickListener)
+                        .onAppClickListener(onAppClickListener)!!
+                        .onAppLongClickListener(onAppLongClickListener)
             }
             models.clear()
             models.addAll(list)
             notifyDataSetChanged()
         }
+    }
+
+    abstract class SingleTapGestureListener : GestureDetector.OnGestureListener {
+        override fun onShowPress(e: MotionEvent?) {
+        }
+
+        override fun onDown(e: MotionEvent?): Boolean {
+            return false
+        }
+
+        override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+            return false
+        }
+
+        override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+            return false
+        }
+
+        override fun onLongPress(e: MotionEvent?) {
+        }
+
+        override fun onSingleTapUp(e: MotionEvent?): Boolean {
+            onSingleTap()
+            return true
+        }
+
+        abstract fun onSingleTap()
     }
 }

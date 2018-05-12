@@ -17,6 +17,8 @@ abstract class AppModel(val app: App) : EpoxyModelWithHolder<AppModel.ViewHolder
 
     @EpoxyAttribute
     protected var onAppClickListener: View.OnClickListener? = null
+    @EpoxyAttribute
+    protected var onAppLongClickListener: View.OnLongClickListener? = null
 
     override fun bind(holder: ViewHolder) {
         super.bind(holder)
@@ -24,6 +26,7 @@ abstract class AppModel(val app: App) : EpoxyModelWithHolder<AppModel.ViewHolder
             text.text = app.label
             icon.setImageDrawable(app.icon)
             touchArea.setOnClickListener(onAppClickListener)
+            touchArea.setOnLongClickListener(onAppLongClickListener)
         }
     }
 
