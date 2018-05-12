@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/licenses">
+
+        <PreferenceScreen
+            android:summary="Android Software Development Kit License"
+            android:title="Android SDK">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://developer.android.com/studio/terms.html" />
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:summary="Apache License, Version 2.0"
+            android:title="Android Support Libraries">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://developer.android.com/topic/libraries/support-library/" />
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:summary="Apache License, Version 2.0"
+            android:title="Android Architecture Components">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://developer.android.com/topic/libraries/architecture/" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:summary="Apache License, Version 2.0"
+            android:title="Epoxy">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/airbnb/epoxy" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:summary="Apache License, Version 2.0"
+            android:title="T9SearchLibrary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/handsomezhou/T9SearchLibrary" />
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

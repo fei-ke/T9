@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">T9</string>
+    <string name="app_info">应用信息</string>
+    <string name="project_site">项目地址</string>
+    <string name="project_url">https://github.com/fei-ke/T9</string>
+    <string name="licenses">软件许可</string>
 </resources>

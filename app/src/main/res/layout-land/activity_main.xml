@@ -22,9 +22,13 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolBar"
+        style="@style/Widget.AppCompat.Toolbar"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         />
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
