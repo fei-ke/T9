@@ -8,8 +8,8 @@ class ViewModelFactory : ViewModelProvider.Factory {
         if (cache.containsKey(aClass)) {
             return cache[aClass] as T
         }
-        val constructor = aClass.getConstructor(Application::class.java)
-        val viewModel = constructor.newInstance(Application.instance)
+        val constructor = aClass.getConstructor(App::class.java)
+        val viewModel = constructor.newInstance(App.instance)
         cache.put(aClass, viewModel)
         return viewModel
     }

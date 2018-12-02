@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.appcompat.widget.PopupMenu
 import android.text.Editable
 import android.text.TextWatcher
@@ -43,7 +42,8 @@ class MainActivity : AppCompatActivity() {
 
         setupRecyclerView()
 
-        mainViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(MainViewModel::class.java)
+        mainViewModel =
+                ViewModelProviders.of(this, ViewModelFactory()).get(MainViewModel::class.java)
         mainViewModel.appList().observe(this, Observer {
             if (it!!.loadMore) {
                 listAdapter.addMore(it.data)
@@ -55,16 +55,16 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.query(null)
 
         textViewKeyword.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
             override fun afterTextChanged(text: Editable?) {
                 mainViewModel.query(text.toString())
             }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
         })
     }
 
@@ -75,7 +75,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_project -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.project_url))))
+            R.id.action_project -> startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(getString(R.string.project_url))
+                )
+            )
             R.id.action_licenses -> startActivity(Intent(this, LicensesActivity::class.java))
         }
         return super.onOptionsItemSelected(item)
@@ -102,15 +107,19 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         })
-        recyclerView.setOnTouchListener({ _, event ->
+        recyclerView.setOnTouchListener { _, event ->
             gestureDetector.onTouchEvent(event)
-        })
+        }
     }
 
     private val onKeyboardClickListener = View.OnClickListener {
         when {
-            it.tag == 10 -> if (textViewKeyword.length() > 0) textViewKeyword.text = null else finish()
-            it.tag == 12 -> if (textViewKeyword.length() > 0) textViewKeyword.editableText.delete(textViewKeyword.length() - 1, textViewKeyword.length())
+            it.tag == 10 -> if (textViewKeyword.length() > 0) textViewKeyword.text =
+                    null else finish()
+            it.tag == 12 -> if (textViewKeyword.length() > 0) textViewKeyword.editableText.delete(
+                textViewKeyword.length() - 1,
+                textViewKeyword.length()
+            )
             it.tag == 11 -> textViewKeyword.append("0")
             else -> textViewKeyword.append(it.tag.toString())
         }
@@ -119,57 +128,60 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (!textViewKeyword.text.isEmpty()) {
-            textViewKeyword.setText(null)
+            textViewKeyword.text = null
         } else {
             finish()
         }
     }
 
-    private val onAppClickListener = OnModelClickListener<AppModel_, AppModel.ViewHolder> { model, _, _, _ ->
-        val app = model.app
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.addCategory(Intent.CATEGORY_LAUNCHER)
-        intent.setClassName(app.pkgName, app.className)
-        if (this.packageName == app.pkgName) {
-            return@OnModelClickListener
-        } else {
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+    private val onAppClickListener =
+        OnModelClickListener<ShortcutModel_, ShortcutModel.ViewHolder> { model, _, _, _ ->
+            val app = model.shortcut
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_LAUNCHER)
+            intent.setClassName(app.pkgName, app.className)
+            if (this.packageName == app.pkgName) {
+                return@OnModelClickListener
+            } else {
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+            }
+            startActivity(intent)
         }
-        startActivity(intent)
-    }
 
-    private val onAppLongClickListener = OnModelLongClickListener<AppModel_, AppModel.ViewHolder> { model, _, clickedView, _ ->
-        val app = model.app
-        val popupMenu = PopupMenu(this, clickedView)
-        popupMenu.menu.add(R.string.app_info).setOnMenuItemClickListener {
-            val i = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            i.addCategory(Intent.CATEGORY_DEFAULT)
-            i.data = Uri.parse("package:${app.pkgName}")
-            startActivity(i)
+    private val onAppLongClickListener =
+        OnModelLongClickListener<ShortcutModel_, ShortcutModel.ViewHolder> { model, _, clickedView, _ ->
+            val shortcut = model.shortcut
+            val popupMenu = PopupMenu(this, clickedView)
+            popupMenu.menu.add(R.string.app_info).setOnMenuItemClickListener {
+                val i = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                i.addCategory(Intent.CATEGORY_DEFAULT)
+                i.data = Uri.parse("package:${shortcut.pkgName}")
+                startActivity(i)
+                true
+            }
+            popupMenu.show()
             true
         }
-        popupMenu.show()
-        true
-    }
 
     private val listAdapter = object : EpoxyAdapter() {
         init {
         }
 
-        fun addMore(appList: List<App>) {
-            val list = appList.map {
-                AppModel_(it)
-                        .onAppClickListener(onAppClickListener)!!
-                        .onAppLongClickListener(onAppLongClickListener)
+        fun addMore(shortcutList: List<Shortcut>) {
+            val list = shortcutList.map {
+                ShortcutModel_(it)
+                    .onShortcutClickListener(onAppClickListener)!!
+                    .onShortcutLongClickListener(onAppLongClickListener)
             }
             addModels(list)
         }
 
-        fun update(appList: List<App>) {
-            val list = appList.map {
-                AppModel_(it)
-                        .onAppClickListener(onAppClickListener)!!
-                        .onAppLongClickListener(onAppLongClickListener)
+        fun update(shortcutList: List<Shortcut>) {
+            val list = shortcutList.map {
+                ShortcutModel_(it)
+                    .onShortcutClickListener(onAppClickListener)!!
+                    .onShortcutLongClickListener(onAppLongClickListener)
             }
             models.clear()
             models.addAll(list)
@@ -177,26 +189,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    abstract class SingleTapGestureListener : GestureDetector.OnGestureListener {
-        override fun onShowPress(e: MotionEvent?) {
-        }
-
-        override fun onDown(e: MotionEvent?): Boolean {
-            return false
-        }
-
-        override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
-            return false
-        }
-
-        override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
-            return false
-        }
-
-        override fun onLongPress(e: MotionEvent?) {
-        }
-
-        override fun onSingleTapUp(e: MotionEvent?): Boolean {
+    abstract class SingleTapGestureListener : GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
             onSingleTap()
             return true
         }

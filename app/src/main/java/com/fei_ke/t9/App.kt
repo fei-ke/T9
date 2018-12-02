@@ -1,8 +1,13 @@
 package com.fei_ke.t9
 
-import android.graphics.drawable.Drawable
-import com.t9search.model.PinyinSearchUnit
+import android.app.Application
 
-class App(val pkgName: String, val className: String, val label: String, val icon: Drawable) {
-    val searchUnit = PinyinSearchUnit(label)
+class App : Application() {
+    companion object {
+        lateinit var instance: App
+    }
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+    }
 }

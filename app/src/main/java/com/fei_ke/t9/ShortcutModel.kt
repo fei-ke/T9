@@ -10,23 +10,23 @@ import com.fei_ke.common.base.BaseEpoxyHolder
 import kotlinx.android.synthetic.main.app_item.view.*
 
 @EpoxyModelClass(layout = R.layout.app_item)
-abstract class AppModel(val app: App) : EpoxyModelWithHolder<AppModel.ViewHolder>() {
+abstract class ShortcutModel(val shortcut: Shortcut) : EpoxyModelWithHolder<ShortcutModel.ViewHolder>() {
     init {
-        id(app.className)
+        id(shortcut.className)
     }
 
     @EpoxyAttribute
-    protected var onAppClickListener: View.OnClickListener? = null
+    protected var onShortcutClickListener: View.OnClickListener? = null
     @EpoxyAttribute
-    protected var onAppLongClickListener: View.OnLongClickListener? = null
+    protected var onShortcutLongClickListener: View.OnLongClickListener? = null
 
     override fun bind(holder: ViewHolder) {
         super.bind(holder)
         with(holder) {
-            text.text = app.label
-            icon.setImageDrawable(app.icon)
-            touchArea.setOnClickListener(onAppClickListener)
-            touchArea.setOnLongClickListener(onAppLongClickListener)
+            text.text = shortcut.label
+            icon.setImageDrawable(shortcut.icon)
+            touchArea.setOnClickListener(onShortcutClickListener)
+            touchArea.setOnLongClickListener(onShortcutLongClickListener)
         }
     }
 

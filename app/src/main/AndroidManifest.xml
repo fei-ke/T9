@@ -3,7 +3,7 @@
     package="com.fei_ke.t9">
 
     <application
-        android:name=".Application"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"

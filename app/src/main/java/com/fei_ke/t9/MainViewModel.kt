@@ -13,20 +13,20 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.ArrayList
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private val allAppList = ArrayList<App>()
+class MainViewModel(application: App) : AndroidViewModel(application) {
+    private val allAppList = ArrayList<Shortcut>()
 
-    private val appList = MutableLiveData<ListData<App>>()
+    private val appList = MutableLiveData<ListData<Shortcut>>()
 
     private var keywords: String? = null
 
-    private val searchedCache = WeakHashMap<String?, List<App>>()
+    private val searchedCache = WeakHashMap<String?, List<Shortcut>>()
 
     private val loading = AtomicBoolean(true)
 
     init {
         val loadTask = @SuppressLint("StaticFieldLeak")
-        object : AsyncTask<Unit, List<App>, Unit>() {
+        object : AsyncTask<Unit, List<Shortcut>, Unit>() {
             override fun doInBackground(vararg params: Unit) {
                 val packageManager = application.packageManager
                 val intent = Intent(Intent.ACTION_MAIN)
@@ -34,10 +34,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
                 val activities = packageManager.queryIntentActivities(intent, 0)
 
-                val tempList = ArrayList<App>()
+                val tempList = ArrayList<Shortcut>()
 
                 activities.forEachIndexed { index, info ->
-                    val app = App(info.activityInfo.packageName,
+                    val app = Shortcut(info.activityInfo.packageName,
                             info.activityInfo.name,
                             info.loadLabel(packageManager).toString(),
                             info.loadIcon(packageManager))
@@ -51,7 +51,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
 
-            override fun onProgressUpdate(vararg values: List<App>) {
+            override fun onProgressUpdate(vararg values: List<Shortcut>) {
                 super.onProgressUpdate(*values)
                 val list = values[0]
                 allAppList.addAll(list)
