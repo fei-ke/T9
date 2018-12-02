@@ -1,15 +1,19 @@
 package com.fei_ke.t9
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
+import android.view.GestureDetector
+import android.view.Menu
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.airbnb.epoxy.EpoxyAdapter
 import com.airbnb.epoxy.OnModelClickListener
 import com.airbnb.epoxy.OnModelLongClickListener
