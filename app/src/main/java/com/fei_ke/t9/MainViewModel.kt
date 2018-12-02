@@ -1,8 +1,8 @@
 package com.fei_ke.t9
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import android.content.Intent
 import android.os.AsyncTask
 import android.text.TextUtils

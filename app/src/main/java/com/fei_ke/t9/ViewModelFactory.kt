@@ -1,7 +1,7 @@
 package com.fei_ke.t9
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 
 class ViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(aClass: Class<T>): T {

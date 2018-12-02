@@ -1,13 +1,13 @@
 package com.fei_ke.t9
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.PopupMenu
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.appcompat.widget.PopupMenu
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         val spanCount = 3
-        val layoutManager = GridLayoutManager(this, spanCount)
+        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, spanCount)
         listAdapter.spanCount = spanCount
         layoutManager.spanSizeLookup = listAdapter.spanSizeLookup
         recyclerView.adapter = listAdapter

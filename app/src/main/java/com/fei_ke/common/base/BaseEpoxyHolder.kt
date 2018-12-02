@@ -1,6 +1,6 @@
 package com.fei_ke.common.base
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import android.view.View
 import com.airbnb.epoxy.EpoxyHolder
 

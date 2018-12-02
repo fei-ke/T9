@@ -20,7 +20,7 @@
         android:textSize="30sp"
         />
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
         style="@style/Widget.AppCompat.Toolbar"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -29,7 +29,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,7 +38,7 @@
         android:clipChildren="false"
         />
 
-    <android.support.v7.widget.GridLayout
+    <androidx.gridlayout.widget.GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="match_parent"
         android:layout_height="300dp"
@@ -108,5 +108,5 @@
             style="@style/keyboard_item"
             android:text="←"
             />
-    </android.support.v7.widget.GridLayout>
+    </androidx.gridlayout.widget.GridLayout>
 </RelativeLayout>
