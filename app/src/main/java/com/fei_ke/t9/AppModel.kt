@@ -7,7 +7,7 @@ import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.fei_ke.common.base.BaseEpoxyHolder
-import com.fei_ke.common.kotterknife.bindView
+import kotlinx.android.synthetic.main.app_item.view.*
 
 @EpoxyModelClass(layout = R.layout.app_item)
 abstract class AppModel(val app: App) : EpoxyModelWithHolder<AppModel.ViewHolder>() {
@@ -31,8 +31,8 @@ abstract class AppModel(val app: App) : EpoxyModelWithHolder<AppModel.ViewHolder
     }
 
     class ViewHolder : BaseEpoxyHolder() {
-        val icon: ImageView by bindView(R.id.imageViewIcon)
-        val text: TextView by bindView(R.id.textViewName)
-        val touchArea: View by bindView(R.id.touchArea)
+        val icon: ImageView by lazy { itemView.imageViewIcon }
+        val text: TextView by lazy { itemView.textViewName }
+        val touchArea: View by lazy { itemView.touchArea }
     }
 }
