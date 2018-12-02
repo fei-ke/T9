@@ -37,10 +37,11 @@ class MainViewModel(application: App) : AndroidViewModel(application) {
                 val tempList = ArrayList<Shortcut>()
 
                 activities.forEachIndexed { index, info ->
-                    val app = Shortcut(info.activityInfo.packageName,
-                            info.activityInfo.name,
-                            info.loadLabel(packageManager).toString(),
-                            info.loadIcon(packageManager))
+                    val app = Shortcut(
+                        info.activityInfo.packageName,
+                        info.activityInfo.name,
+                        info.loadLabel(packageManager).toString()
+                    )
 
                     PinyinUtil.parse(app.searchUnit)
                     tempList.add(app)

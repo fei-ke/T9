@@ -10,7 +10,8 @@ import com.fei_ke.common.base.BaseEpoxyHolder
 import kotlinx.android.synthetic.main.app_item.view.*
 
 @EpoxyModelClass(layout = R.layout.app_item)
-abstract class ShortcutModel(val shortcut: Shortcut) : EpoxyModelWithHolder<ShortcutModel.ViewHolder>() {
+abstract class ShortcutModel(val shortcut: Shortcut) :
+    EpoxyModelWithHolder<ShortcutModel.ViewHolder>() {
     init {
         id(shortcut.className)
     }
@@ -24,7 +25,7 @@ abstract class ShortcutModel(val shortcut: Shortcut) : EpoxyModelWithHolder<Shor
         super.bind(holder)
         with(holder) {
             text.text = shortcut.label
-            icon.setImageDrawable(shortcut.icon)
+            IconLoader.load(icon, shortcut.pkgName, shortcut.className)
             touchArea.setOnClickListener(onShortcutClickListener)
             touchArea.setOnLongClickListener(onShortcutLongClickListener)
         }
