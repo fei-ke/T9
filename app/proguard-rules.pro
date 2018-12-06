@@ -24,6 +24,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep public class * extends android.arch.lifecycle.ViewModel{
+-keep public class * extends androidx.lifecycle.ViewModel{
     <init>(***);
 }
