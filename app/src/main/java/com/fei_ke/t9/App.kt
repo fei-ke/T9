@@ -17,6 +17,6 @@ class App : Application() {
         db = Room.databaseBuilder(this, AppDataBase::class.java, "database.db")
             .build()
 
-        ShortcutLoader.startLoad()
+        ShortcutLoader.init()
     }
 }

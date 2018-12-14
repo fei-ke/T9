@@ -4,13 +4,16 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import androidx.annotation.WorkerThread
 import java.util.concurrent.Executors
 
 object ShortcutLoader {
+    private val app = App.instance
     private val shortcutDao = App.db.getShortcutDao()
     private val singleThread = Executors.newSingleThreadExecutor()
     val shortcutList = shortcutDao.getAllShortcut()
-    private val receiver = object : BroadcastReceiver() {
+
+    private val packageReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val pkgName = intent.dataString?.split(":")?.lastOrNull() ?: return
             when (intent.action) {
@@ -30,20 +33,34 @@ object ShortcutLoader {
         }
     }
 
-    fun startLoad() {
-        val intentFilter = IntentFilter().apply {
+    private val localeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            singleThread.submit { loadInternal() }
+        }
+    }
+
+    fun init() {
+        IntentFilter().apply {
             addAction(Intent.ACTION_PACKAGE_ADDED)
             addAction(Intent.ACTION_PACKAGE_CHANGED)
             addAction(Intent.ACTION_PACKAGE_REMOVED)
             addDataScheme("package")
+        }.let {
+            app.registerReceiver(packageReceiver, it)
         }
-        App.instance.registerReceiver(receiver, intentFilter)
+
+        IntentFilter().apply {
+            addAction(Intent.ACTION_LOCALE_CHANGED)
+        }.let {
+            app.registerReceiver(localeReceiver, it)
+        }
 
         singleThread.submit { loadInternal() }
     }
 
+    @WorkerThread
     private fun loadInternal(pkg: String? = null) {
-        val packageManager = App.instance.packageManager
+        val packageManager = app.packageManager
         val intent = Intent(Intent.ACTION_MAIN)
             .addCategory(Intent.CATEGORY_LAUNCHER)
             .setPackage(pkg)
