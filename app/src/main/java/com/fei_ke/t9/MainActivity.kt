@@ -158,10 +158,11 @@ class MainActivity : AppCompatActivity() {
             val shortcut = model.shortcut
             val popupMenu = PopupMenu(this, clickedView)
             popupMenu.menu.add(R.string.app_info).setOnMenuItemClickListener {
-                val i = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                i.addCategory(Intent.CATEGORY_DEFAULT)
-                i.data = Uri.parse("package:${shortcut.pkgName}")
-                startActivity(i)
+                Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    addCategory(Intent.CATEGORY_DEFAULT)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    data = Uri.parse("package:${shortcut.pkgName}")
+                }.run(::startActivity)
                 true
             }
             popupMenu.show()
