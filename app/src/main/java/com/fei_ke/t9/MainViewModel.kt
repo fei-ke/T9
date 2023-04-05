@@ -3,11 +3,12 @@ package com.fei_ke.t9
 import android.text.TextUtils
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.fei_ke.common.model.ListData
 import com.t9search.util.T9Util
-import io.reactivex.schedulers.Schedulers
-import java.util.*
-import kotlin.collections.ArrayList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.WeakHashMap
 
 class MainViewModel(application: App) : AndroidViewModel(application) {
     private val allAppList = ArrayList<Shortcut>()
@@ -19,14 +20,14 @@ class MainViewModel(application: App) : AndroidViewModel(application) {
     private val searchedCache = WeakHashMap<String?, List<Shortcut>>()
 
     init {
-        val ignored = ShortcutLoader.shortcutList
-            .subscribeOn(Schedulers.io())
-            .subscribe {
+        viewModelScope.launch(Dispatchers.IO) {
+            ShortcutLoader.shortcutList.collect {
                 allAppList.clear()
                 allAppList.addAll(it)
                 searchedCache.clear()
                 query(keywords)
             }
+        }
     }
 
     fun appList() = appList

@@ -5,12 +5,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.fei_ke.t9.Shortcut
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ShortcutDao {
     @Query("SELECT * FROM Shortcut")
-    fun getAllShortcut(): Observable<List<Shortcut>>
+    fun getAllShortcut(): Flow<List<Shortcut>>
 
     @Query("DELETE  FROM Shortcut WHERE pkgName = :pkgName")
     fun deleteByPackageName(pkgName: String)
