@@ -17,16 +17,22 @@ import androidx.lifecycle.ViewModelProviders
 import com.airbnb.epoxy.EpoxyAdapter
 import com.airbnb.epoxy.OnModelClickListener
 import com.airbnb.epoxy.OnModelLongClickListener
-import kotlinx.android.synthetic.main.activity_main.*
+import com.fei_ke.t9.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
 
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+
+    private val toolBar by lazy { binding.toolBar }
+    private val gridLayout by lazy { binding.gridLayout }
+    private val textViewKeyword by lazy { binding.textViewKeyword }
+    private val recyclerView by lazy { binding.recyclerView }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        setContentView(binding.root)
         setSupportActionBar(toolBar)
         val actionBar = supportActionBar!!
         actionBar.setDisplayShowTitleEnabled(false)
@@ -47,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
 
         mainViewModel =
-                ViewModelProviders.of(this, ViewModelFactory()).get(MainViewModel::class.java)
+            ViewModelProviders.of(this, ViewModelFactory()).get(MainViewModel::class.java)
         mainViewModel.appList().observe(this, Observer {
             if (it!!.loadMore) {
                 listAdapter.addMore(it.data)
@@ -85,6 +91,7 @@ class MainActivity : AppCompatActivity() {
                     Uri.parse(getString(R.string.project_url))
                 )
             )
+
             R.id.action_licenses -> startActivity(Intent(this, LicensesActivity::class.java))
         }
         return super.onOptionsItemSelected(item)
@@ -119,11 +126,13 @@ class MainActivity : AppCompatActivity() {
     private val onKeyboardClickListener = View.OnClickListener {
         when {
             it.tag == 10 -> if (textViewKeyword.length() > 0) textViewKeyword.text =
-                    null else finish()
+                null else finish()
+
             it.tag == 12 -> if (textViewKeyword.length() > 0) textViewKeyword.editableText.delete(
                 textViewKeyword.length() - 1,
                 textViewKeyword.length()
             )
+
             it.tag == 11 -> textViewKeyword.append("0")
             else -> textViewKeyword.append(it.tag.toString())
         }
@@ -195,7 +204,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     abstract class SingleTapGestureListener : GestureDetector.SimpleOnGestureListener() {
-        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
             onSingleTap()
             return true
         }

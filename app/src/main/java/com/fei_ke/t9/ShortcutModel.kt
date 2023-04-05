@@ -7,7 +7,6 @@ import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.fei_ke.common.base.BaseEpoxyHolder
-import kotlinx.android.synthetic.main.app_item.view.*
 
 @EpoxyModelClass(layout = R.layout.app_item)
 abstract class ShortcutModel(val shortcut: Shortcut) :
@@ -32,8 +31,8 @@ abstract class ShortcutModel(val shortcut: Shortcut) :
     }
 
     class ViewHolder : BaseEpoxyHolder() {
-        val icon: ImageView by lazy { itemView.imageViewIcon }
-        val text: TextView by lazy { itemView.textViewName }
-        val touchArea: View by lazy { itemView.touchArea }
+        val icon: ImageView by lazy { itemView.findViewById(R.id.imageViewIcon) }
+        val text: TextView by lazy { itemView.findViewById(R.id.textViewName) }
+        val touchArea: View by lazy { itemView.findViewById(R.id.touchArea) }
     }
 }
