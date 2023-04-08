@@ -45,12 +45,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fei_ke.t9.Shortcut
+import com.fei_ke.t9.widget.LifecycleAware
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
 fun Home(homeViewModel: HomeViewModel = viewModel()) {
+    LifecycleAware(
+        onStop = homeViewModel::scheduleClearFilter,
+        onStart = homeViewModel::cancelClearFilterJob,
+    )
 
     val uiState by homeViewModel.uiState.collectAsState()
 
