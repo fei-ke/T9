@@ -26,8 +26,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -102,39 +102,50 @@ fun AppList(appList: List<Shortcut>) {
         horizontalArrangement = Arrangement.Center,
     ) {
         items(appList) { item ->
-            Box(
+            AppShortcut(context, item)
+        }
+    }
+}
+
+@Composable
+private fun AppShortcut(context: Context, item: Shortcut) {
+    Box(
+        modifier = Modifier
+            .padding(8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        val drawable by loadAppIcon(LocalContext.current, ComponentName(item.pkgName, item.className))
+        val drawablePainter = rememberDrawablePainter(drawable)
+        Surface(
+            shape = MaterialTheme.shapes.large,
+            color = Color.Unspecified
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .padding(horizontal = 8.dp)
+                    .fillMaxWidth()
                     .combinedClickable(onClick = {
                         startApp(context, item)
                     })
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                val drawable by loadAppIcon(LocalContext.current, ComponentName(item.pkgName, item.className))
-                val drawablePainter = rememberDrawablePainter(drawable)
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        painter = drawablePainter,
-                        contentDescription = item.label,
-                        modifier = Modifier.size(48.dp),
-                        tint = Color.Unspecified,
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = item.label,
-                        maxLines = 1,
-                        style = MaterialTheme.typography.titleSmall,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
+                    .padding(8.dp)
 
+            ) {
+                Icon(
+                    painter = drawablePainter,
+                    contentDescription = item.label,
+                    modifier = Modifier.size(48.dp),
+                    tint = Color.Unspecified,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = item.label,
+                    maxLines = 1,
+                    style = MaterialTheme.typography.titleSmall,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
+
     }
 }
 
@@ -173,14 +184,19 @@ private fun Panel(
                 }
             }
 
-            Box(
-                modifier = Modifier
-                    .combinedClickable(onClick = onClick)
-                    .fillMaxWidth()
-                    .height(80.dp),
-                contentAlignment = Alignment.Center
+            Surface(
+                shape = MaterialTheme.shapes.large,
+                color = Color.Unspecified
             ) {
-                Text(text = item.text)
+                Box(
+                    modifier = Modifier
+                        .combinedClickable(onClick = onClick)
+                        .fillMaxWidth()
+                        .height(80.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = item.text)
+                }
             }
         }
     }
