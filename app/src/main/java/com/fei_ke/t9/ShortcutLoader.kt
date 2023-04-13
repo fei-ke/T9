@@ -1,10 +1,15 @@
 package com.fei_ke.t9
 
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import androidx.annotation.WorkerThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
 
 object ShortcutLoader {
@@ -20,9 +25,11 @@ object ShortcutLoader {
                 Intent.ACTION_PACKAGE_ADDED -> singleThread.submit {
                     loadInternal(pkgName)
                 }
+
                 Intent.ACTION_PACKAGE_REMOVED -> singleThread.submit {
                     shortcutDao.deleteByPackageName(pkgName)
                 }
+
                 Intent.ACTION_PACKAGE_CHANGED -> {
                     singleThread.submit {
                         shortcutDao.deleteByPackageName(pkgName)
@@ -74,6 +81,17 @@ object ShortcutLoader {
                 )
             }
         shortcutDao.save(*shortcutList.toTypedArray())
+    }
+
+    suspend fun loadIcon(shortcut: Shortcut): Drawable? {
+        return try {
+            withContext(Dispatchers.IO) {
+                app.packageManager.getActivityIcon(ComponentName(shortcut.pkgName, shortcut.className))
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            notifyPackageRemoved(shortcut.pkgName)
+            null
+        }
     }
 
     fun notifyPackageRemoved(pkgName: String) {

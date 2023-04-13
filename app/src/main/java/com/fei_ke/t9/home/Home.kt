@@ -2,29 +2,22 @@
 
 package com.fei_ke.t9.home
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -58,10 +51,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fei_ke.t9.R
 import com.fei_ke.t9.Shortcut
+import com.fei_ke.t9.ShortcutLoader
 import com.fei_ke.t9.widget.LifecycleAware
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun Home(homeViewModel: HomeViewModel = viewModel()) {
@@ -119,7 +111,7 @@ fun AppList(appList: List<Shortcut>) {
         columns = GridCells.Fixed(3),
         horizontalArrangement = Arrangement.Center,
     ) {
-        items(appList) { item ->
+        items(appList, key = { it }) { item ->
             AppShortcut(context, item)
         }
     }
@@ -134,7 +126,7 @@ private fun AppShortcut(context: Context, item: Shortcut) {
             .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
-        val drawable by loadAppIcon(LocalContext.current, ComponentName(item.pkgName, item.className))
+        val drawable by loadAppIcon(item)
         val drawablePainter = rememberDrawablePainter(drawable)
         Surface(
             shape = MaterialTheme.shapes.large,
@@ -247,17 +239,11 @@ private fun Panel(
 }
 
 @Composable
-private fun loadAppIcon(context: Context, componentName: ComponentName): MutableState<Drawable?> {
+private fun loadAppIcon(shortcut: Shortcut): MutableState<Drawable?> {
     val drawable = remember { mutableStateOf<Drawable?>(null) }
 
-    LaunchedEffect(componentName.toShortString()) {
-        launch(Dispatchers.IO) {
-            drawable.value = try {
-                context.packageManager.getActivityIcon(componentName)
-            } catch (e: PackageManager.NameNotFoundException) {
-                null
-            }
-        }
+    LaunchedEffect(shortcut.hashCode()) {
+        drawable.value = ShortcutLoader.loadIcon(shortcut)
     }
     return drawable
 }

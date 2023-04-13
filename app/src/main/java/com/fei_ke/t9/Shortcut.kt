@@ -7,7 +7,7 @@ import com.t9search.model.PinyinSearchUnit
 import com.t9search.util.PinyinUtil
 
 @Entity(tableName = "Shortcut", primaryKeys = ["pkgName", "className"])
-class Shortcut(
+data class Shortcut(
     @ColumnInfo val pkgName: String,
     @ColumnInfo val className: String,
     @ColumnInfo val label: String
