@@ -111,7 +111,7 @@ fun AppList(appList: List<Shortcut>) {
         columns = GridCells.Fixed(3),
         horizontalArrangement = Arrangement.Center,
     ) {
-        items(appList, key = { it }) { item ->
+        items(appList, key = { it.hashCode() }) { item ->
             AppShortcut(context, item)
         }
     }
