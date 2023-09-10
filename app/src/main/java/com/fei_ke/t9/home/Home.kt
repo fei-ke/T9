@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -111,7 +110,7 @@ fun AppList(appList: List<Shortcut>) {
         columns = GridCells.Fixed(3),
         horizontalArrangement = Arrangement.Center,
     ) {
-        items(appList, key = { it.hashCode() }) { item ->
+        items(appList) { item ->
             AppShortcut(context, item)
         }
     }
