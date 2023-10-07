@@ -15,8 +15,11 @@ data class HomeUiState(
         }
         return appList.filter {
             T9Util.match(it.searchUnit, filter)
-        }.sortedBy {
-            it.label.indexOf(it.searchUnit.matchKeyword.toString())
-        }
+        }.sortedWith(
+            compareBy(
+                { it.label.indexOf(it.searchUnit.matchKeyword.toString()) },
+                { if (it.label.isEmpty()) 0 else 1 - it.searchUnit.matchKeyword.length / it.label.length }
+            )
+        )
     }
 }
